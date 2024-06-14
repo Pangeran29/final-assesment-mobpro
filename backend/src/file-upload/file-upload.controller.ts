@@ -38,7 +38,7 @@ export class FileUploadController {
     schema: {
       type: 'object',
       properties: {
-        file: {
+        image: {
           type: 'string',
           format: 'binary',
         },
@@ -52,14 +52,14 @@ export class FileUploadController {
     },
   })
   @Post()
-  @UseInterceptors(FileInterceptor('file'))
+  @UseInterceptors(FileInterceptor('image'))
   async uploadFile(
-    @UploadedFile() file: Express.Multer.File,
+    @UploadedFile() image: Express.Multer.File,
     @Body() dto: FileUploadDto,
   ) {
     const data = await this.fileUploadService.saveFile(
       dto.upload_by,
-      file,
+      image,
     );
 
     let file_upload = dto.intoFileUpload();
