@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">mobpro1-compose</string>
+    <string name="gambar">Gambar %1$s</string>
+    <string name="error">Gagal memuat data.. Koneksi error.</string>
+    <string name="try_again">Coba lagi</string>
+    <string name="profile">Profil</string>
+    <string name="tutup">Tutup</string>
+    <string name="logout">Log Out</string>
+    <string name="tambah_hewan">Tambah Hewan</string>
+    <string name="nama">Nama</string>
+    <string name="nama_latin">Nama latin</string>
+    <string name="batal">Batal</string>
+    <string name="simpan">Simpan</string>
+    <string name="confirm">Konfirmasi</string>
+    <string name="confirm_delete_title">Hapus item</string>
+    <string name="confirm_delete_message">Anda yakin ingin menghapus item ini?</string>
+</resources>
