@@ -1,0 +1,29 @@
+version: "3.9"
+services:
+  mysql:
+    image: mysql:latest
+    container_name: nirbi-mysql
+    hostname: mysql
+    ports:
+      - ${MYSQL_PORT}:${MYSQL_PORT}
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_DB: ${MYSQL_DB}
+    volumes:
+      - db:/var/lib/mysql
+    restart: unless-stopped
+
+  api:
+    stdin_open: true
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: nirbi-api
+    depends_on:
+      - mysql
+    ports:
+      - ${PORT}:${PORT}
+    restart: always
+
+volumes:
+  db:
