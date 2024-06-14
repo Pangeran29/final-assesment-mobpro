@@ -55,4 +55,4 @@ object HewanApi {
     }
 }
 
-enum class ApiStatus { LOADING, SUCCESS, FAILED }
+//enum class ApiStatus { LOADING, SUCCESS, FAILED }

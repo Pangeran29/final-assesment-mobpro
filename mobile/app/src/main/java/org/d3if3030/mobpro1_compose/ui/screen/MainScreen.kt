@@ -79,12 +79,12 @@ import kotlinx.coroutines.launch
 import org.d3if3030.mobpro1_compose.BuildConfig
 import org.d3if3030.mobpro1_compose.R
 import org.d3if3030.mobpro1_compose.model.Hewan
+import org.d3if3030.mobpro1_compose.model.LogDay
 import org.d3if3030.mobpro1_compose.model.User
 import org.d3if3030.mobpro1_compose.network.ApiStatus
 import org.d3if3030.mobpro1_compose.network.HewanApi
 import org.d3if3030.mobpro1_compose.network.UserDataStore
 import org.d3if3030.mobpro1_compose.ui.theme.Mobpro1composeTheme
-import kotlin.math.log
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -155,7 +155,9 @@ fun MainScreen() {
         })
 
     }) { padding ->
-        ScreenContent(viewModel, user.email, Modifier.padding(padding))
+        if (!user.email.isEmpty()) {
+            ScreenContent(viewModel, user.email, Modifier.padding(padding))
+        }
 
         if (showDialog) {
             ProfilDialog(user = user, onDismissRequest = { showDialog = false }) {
@@ -167,7 +169,7 @@ fun MainScreen() {
         if (showHewanDialog) {
             HewanDialog(bitmap = bitmap,
                 onDismissRequest = { showHewanDialog = false }) { nama, namaLatin ->
-                viewModel.saveData(user.email, nama, namaLatin, bitmap!!)
+                viewModel.saveData(user.email, nama, bitmap!!)
                 showHewanDialog = false
             }
         }
@@ -205,6 +207,7 @@ fun ScreenContent(viewModel: MainViewModel, userId: String, modifier: Modifier) 
                 columns = GridCells.Fixed(2),
                 contentPadding = PaddingValues(bottom = 80.dp)
             ) {
+                Log.d("ScreenContent.Data", data.toString())
                 items(data) { ListItem(viewModel, userId, it) }
             }
         }
@@ -230,7 +233,7 @@ fun ScreenContent(viewModel: MainViewModel, userId: String, modifier: Modifier) 
 }
 
 @Composable
-fun ListItem(viewModel: MainViewModel, userId: String, hewan: Hewan) {
+fun ListItem(viewModel: MainViewModel, userId: String, logDay: LogDay) {
     // State to control the visibility of the dialog
     var showDialog by remember { mutableStateOf(false) }
 
@@ -244,10 +247,9 @@ fun ListItem(viewModel: MainViewModel, userId: String, hewan: Hewan) {
     ) {
         AsyncImage(
             model = ImageRequest.Builder(LocalContext.current).data(
-                    if (hewan.nama == "Ayam") HewanApi.getHewanUrl("not-found")
-                    else HewanApi.getHewanUrl(hewan.imageId)
+                    logDay.file_location
                 ).crossfade(true).build(),
-            contentDescription = stringResource(R.string.gambar, hewan.nama),
+            contentDescription = stringResource(R.string.gambar, "LogDay"),
             contentScale = ContentScale.Crop,
             modifier = Modifier
                 .fillMaxWidth()
@@ -262,26 +264,20 @@ fun ListItem(viewModel: MainViewModel, userId: String, hewan: Hewan) {
                 .background(Color(red = 0f, green = 0f, blue = 0f, alpha = 0.5f))
                 .padding(4.dp)
         ) {
-            Text(text = hewan.nama, fontWeight = FontWeight.Bold, color = Color.White)
-            Text(
-                text = hewan.namaLatin,
-                fontStyle = FontStyle.Italic,
-                fontSize = 14.sp,
-                color = Color.White
-            )
+            Text(text = logDay.description, fontWeight = FontWeight.Bold, color = Color.White)
         }
     }
 
     // Confirmation Dialog
-    if (showDialog && hewan.imageId.startsWith("pangeranjonathan1")) {
+    if (showDialog) {
         AlertDialog(onDismissRequest = { showDialog = false }, title = {
             Text(text = stringResource(id = R.string.confirm_delete_title))
         }, text = {
-            Text(text = stringResource(id = R.string.confirm_delete_message, hewan.nama))
+            Text(text = stringResource(id = R.string.confirm_delete_message))
         }, confirmButton = {
             Button(onClick = {
                 // Handle the delete action here
-                viewModel.deleteData(userId, hewan.id)
+                viewModel.deleteData(userId, logDay.id)
                 showDialog = false
             }) {
                 Text(text = stringResource(id = R.string.confirm))

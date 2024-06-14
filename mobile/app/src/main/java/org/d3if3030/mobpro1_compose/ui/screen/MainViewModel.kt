@@ -12,12 +12,15 @@ import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import org.d3if3030.mobpro1_compose.model.Hewan
+import org.d3if3030.mobpro1_compose.model.LogDay
 import org.d3if3030.mobpro1_compose.network.ApiStatus
 import org.d3if3030.mobpro1_compose.network.HewanApi
+import org.d3if3030.mobpro1_compose.network.LogDayApi
 import java.io.ByteArrayOutputStream
+import kotlin.math.log
 
 class MainViewModel : ViewModel() {
-    var data = mutableStateOf(emptyList<Hewan>())
+    var data = mutableStateOf(emptyList<LogDay>())
         private set
 
     var status = MutableStateFlow(ApiStatus.LOADING)
@@ -30,7 +33,7 @@ class MainViewModel : ViewModel() {
         viewModelScope.launch(Dispatchers.IO) {
             status.value = ApiStatus.LOADING
             try {
-                data.value = HewanApi.service.getHewan(userId)
+                data.value = LogDayApi.service.getLogDay(userId).data
                 status.value = ApiStatus.SUCCESS
             } catch (e: Exception) {
                 Log.d("MainViewModel", "Failure: ${e.message}")
@@ -39,33 +42,33 @@ class MainViewModel : ViewModel() {
         }
     }
 
-    fun saveData(userId: String, nama: String, namaLatin: String, bitmap: Bitmap) {
+    fun saveData(userId: String, description: String, bitmap: Bitmap) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                val result = HewanApi.service.postHewan(
-                    userId,
-                    nama.toRequestBody("text/plain".toMediaTypeOrNull()),
-                    namaLatin.toRequestBody("text/plain".toMediaTypeOrNull()),
-                    bitmap.toMultipartBody()
+                val result = LogDayApi.service.postLogDay(
+                    bitmap.toMultipartBody(),
+                    userId.toRequestBody("text/plain".toMediaTypeOrNull()),
+                    description.toRequestBody("text/plain".toMediaTypeOrNull()),
                 )
 
-                if (result.status == "success") retrieveData(userId)
+                if (result.statusCode == 201) retrieveData(userId)
                 else throw Exception(result.message)
             } catch (e: Exception) {
+                Log.d("MainViewModel.saveData.exeception", e.toString())
                 Log.d("MainViewModel", "Failure: ${e.message}")
                 errorMessage.value = "Error: ${e.message}"
             }
         }
     }
 
-    fun deleteData(userId: String, hewanId: String) {
+    fun deleteData(userEmail: String, imageId: Int) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                val result = HewanApi.service.deleteHewan(
-                    userId, hewanId
+                val result = LogDayApi.service.deleteLogDay(
+                    imageId,
                 )
 
-                if (result.status == "success") retrieveData(userId)
+                if (result.statusCode == 200) retrieveData(userEmail)
                 else throw Exception(result.message)
             } catch (e: Exception) {
                 Log.d("MainViewModel", "Failure: ${e.message}")
