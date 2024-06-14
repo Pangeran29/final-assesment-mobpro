@@ -26,8 +26,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             Mobpro1composeTheme {
                 Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
+                    modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background
                 ) {
                     MainScreen()
                 }

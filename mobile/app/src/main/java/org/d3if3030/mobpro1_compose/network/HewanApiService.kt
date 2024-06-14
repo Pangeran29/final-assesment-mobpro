@@ -18,14 +18,11 @@ import retrofit2.http.Query
 
 private const val BASE_URL = "https://gh.d3ifcool.org/"
 
-private val moshi = Moshi.Builder()
-    .add(KotlinJsonAdapterFactory())
-    .build()
+private val moshi = Moshi.Builder().add(KotlinJsonAdapterFactory()).build()
 
-private val retrofit = Retrofit.Builder()
-    .addConverterFactory(MoshiConverterFactory.create(moshi))
-    .baseUrl(BASE_URL)
-    .build()
+private val retrofit =
+    Retrofit.Builder().addConverterFactory(MoshiConverterFactory.create(moshi)).baseUrl(BASE_URL)
+        .build()
 
 interface HewanApiService {
     @GET("hewan.php")
@@ -44,8 +41,7 @@ interface HewanApiService {
 
     @DELETE("hewan.php")
     suspend fun deleteHewan(
-        @Header("Authorization") userId: String,
-        @Query("id") id: String
+        @Header("Authorization") userId: String, @Query("id") id: String
     ): OpStatus
 }
 

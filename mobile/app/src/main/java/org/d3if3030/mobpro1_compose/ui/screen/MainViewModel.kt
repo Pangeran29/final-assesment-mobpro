@@ -49,10 +49,8 @@ class MainViewModel : ViewModel() {
                     bitmap.toMultipartBody()
                 )
 
-                if (result.status == "success")
-                    retrieveData(userId)
-                else
-                    throw Exception(result.message)
+                if (result.status == "success") retrieveData(userId)
+                else throw Exception(result.message)
             } catch (e: Exception) {
                 Log.d("MainViewModel", "Failure: ${e.message}")
                 errorMessage.value = "Error: ${e.message}"
@@ -64,14 +62,11 @@ class MainViewModel : ViewModel() {
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 val result = HewanApi.service.deleteHewan(
-                    userId,
-                    hewanId
+                    userId, hewanId
                 )
 
-                if (result.status == "success")
-                    retrieveData(userId)
-                else
-                    throw Exception(result.message)
+                if (result.status == "success") retrieveData(userId)
+                else throw Exception(result.message)
             } catch (e: Exception) {
                 Log.d("MainViewModel", "Failure: ${e.message}")
                 errorMessage.value = "Error: ${e.message}"
@@ -84,11 +79,15 @@ class MainViewModel : ViewModel() {
         compress(Bitmap.CompressFormat.JPEG, 80, stream)
         val byteArray = stream.toByteArray()
         val requestBody = byteArray.toRequestBody(
-            "image/jpg".toMediaTypeOrNull(), 0, byteArray.size)
+            "image/jpg".toMediaTypeOrNull(), 0, byteArray.size
+        )
         return MultipartBody.Part.createFormData(
-            "image", "image.jpg", requestBody)
+            "image", "image.jpg", requestBody
+        )
     }
 
-    fun clearMessage() { errorMessage.value = null }
+    fun clearMessage() {
+        errorMessage.value = null
+    }
 
 }

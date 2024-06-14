@@ -35,9 +35,7 @@ import org.d3if3030.mobpro1_compose.ui.theme.Mobpro1composeTheme
 
 @Composable
 fun ProfilDialog(
-    user: User,
-    onDismissRequest: () -> Unit,
-    onConfirmation: () -> Unit
+    user: User, onDismissRequest: () -> Unit, onConfirmation: () -> Unit
 ) {
     Dialog(onDismissRequest = { onDismissRequest() }) {
         Card(
@@ -49,10 +47,8 @@ fun ProfilDialog(
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 AsyncImage(
-                    model = ImageRequest.Builder(LocalContext.current)
-                        .data(user.photoUrl)
-                        .crossfade(true)
-                        .build(),
+                    model = ImageRequest.Builder(LocalContext.current).data(user.photoUrl)
+                        .crossfade(true).build(),
                     contentDescription = null,
                     contentScale = ContentScale.Crop,
                     placeholder = painterResource(id = R.drawable.loading_image),
@@ -69,9 +65,7 @@ fun ProfilDialog(
                     modifier = Modifier.padding(top = 16.dp)
                 )
                 Text(
-                    text = user.email,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
+                    text = user.email, maxLines = 1, overflow = TextOverflow.Ellipsis
                 )
                 Row(
                     modifier = Modifier
@@ -80,8 +74,7 @@ fun ProfilDialog(
                     horizontalArrangement = Arrangement.Center
                 ) {
                     OutlinedButton(
-                        onClick = { onDismissRequest() },
-                        modifier = Modifier.padding(8.dp)
+                        onClick = { onDismissRequest() }, modifier = Modifier.padding(8.dp)
                     ) {
                         Text(stringResource(R.string.tutup))
                     }
@@ -106,10 +99,8 @@ fun ProfilDialog(
 @Composable
 fun DialogPreview() {
     Mobpro1composeTheme {
-        ProfilDialog(
-            user = User("Jonathan", "jonathan@gmail.com", ""),
+        ProfilDialog(user = User("Jonathan", "jonathan@gmail.com", ""),
             onDismissRequest = {},
-            onConfirmation = {}
-        )
+            onConfirmation = {})
     }
 }

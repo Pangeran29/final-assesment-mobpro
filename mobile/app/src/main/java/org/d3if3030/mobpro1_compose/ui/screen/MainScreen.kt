@@ -111,57 +111,50 @@ fun MainScreen() {
         if (bitmap != null) showHewanDialog = true
     }
 
-    Scaffold(
-        floatingActionButton = {
-            FloatingActionButton(onClick = {
-                val options = CropImageContractOptions(
-                    null, CropImageOptions(
-                        imageSourceIncludeCamera = true,
-                        imageSourceIncludeGallery = false,
-                        fixAspectRatio = true
-                    )
+    Scaffold(floatingActionButton = {
+        FloatingActionButton(onClick = {
+            val options = CropImageContractOptions(
+                null, CropImageOptions(
+                    imageSourceIncludeCamera = true,
+                    imageSourceIncludeGallery = false,
+                    fixAspectRatio = true
                 )
-                launcher.launch(options)
-            }) {
-                Icon(
-                    imageVector = Icons.Default.Add, contentDescription = stringResource(
-                        id = R.string.tambah_hewan
-                    )
+            )
+            launcher.launch(options)
+        }) {
+            Icon(
+                imageVector = Icons.Default.Add, contentDescription = stringResource(
+                    id = R.string.tambah_hewan
                 )
-
-            }
-        },
-        topBar = {
-            TopAppBar(
-                title = {
-                    Text(text = stringResource(id = R.string.app_name))
-                },
-                colors = TopAppBarDefaults.mediumTopAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.primaryContainer,
-                    titleContentColor = MaterialTheme.colorScheme.primary
-                ),
-                actions = {
-                    IconButton(onClick = {
-                        if (user.email.isEmpty()) {
-                            CoroutineScope(Dispatchers.IO).launch { signIn(context, dataStore) }
-                        } else {
-                            showDialog = true
-                        }
-
-                    }) {
-                        Icon(
-                            painter = painterResource(
-                                id = R.drawable.baseline_account_circle_24
-                            ),
-                            contentDescription = stringResource(id = R.string.profile),
-                            tint = MaterialTheme.colorScheme.primary
-                        )
-                    }
-                }
             )
 
         }
-    ) { padding ->
+    }, topBar = {
+        TopAppBar(title = {
+            Text(text = stringResource(id = R.string.app_name))
+        }, colors = TopAppBarDefaults.mediumTopAppBarColors(
+            containerColor = MaterialTheme.colorScheme.primaryContainer,
+            titleContentColor = MaterialTheme.colorScheme.primary
+        ), actions = {
+            IconButton(onClick = {
+                if (user.email.isEmpty()) {
+                    CoroutineScope(Dispatchers.IO).launch { signIn(context, dataStore) }
+                } else {
+                    showDialog = true
+                }
+
+            }) {
+                Icon(
+                    painter = painterResource(
+                        id = R.drawable.baseline_account_circle_24
+                    ),
+                    contentDescription = stringResource(id = R.string.profile),
+                    tint = MaterialTheme.colorScheme.primary
+                )
+            }
+        })
+
+    }) { padding ->
         ScreenContent(viewModel, user.email, Modifier.padding(padding))
 
         if (showDialog) {
@@ -172,8 +165,7 @@ fun MainScreen() {
         }
 
         if (showHewanDialog) {
-            HewanDialog(
-                bitmap = bitmap,
+            HewanDialog(bitmap = bitmap,
                 onDismissRequest = { showHewanDialog = false }) { nama, namaLatin ->
                 viewModel.saveData(user.email, nama, namaLatin, bitmap!!)
                 showHewanDialog = false
@@ -199,8 +191,7 @@ fun ScreenContent(viewModel: MainViewModel, userId: String, modifier: Modifier) 
     when (status) {
         ApiStatus.LOADING -> {
             Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
+                modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center
             ) {
                 CircularProgressIndicator()
             }
@@ -237,6 +228,7 @@ fun ScreenContent(viewModel: MainViewModel, userId: String, modifier: Modifier) 
     }
 
 }
+
 @Composable
 fun ListItem(viewModel: MainViewModel, userId: String, hewan: Hewan) {
     // State to control the visibility of the dialog
@@ -251,14 +243,10 @@ fun ListItem(viewModel: MainViewModel, userId: String, hewan: Hewan) {
         contentAlignment = Alignment.BottomCenter
     ) {
         AsyncImage(
-            model = ImageRequest.Builder(LocalContext.current)
-                .data(
-                    if (hewan.nama == "Ayam")
-                        HewanApi.getHewanUrl("not-found")
-                    else
-                        HewanApi.getHewanUrl(hewan.imageId)
-                )
-                .crossfade(true).build(),
+            model = ImageRequest.Builder(LocalContext.current).data(
+                    if (hewan.nama == "Ayam") HewanApi.getHewanUrl("not-found")
+                    else HewanApi.getHewanUrl(hewan.imageId)
+                ).crossfade(true).build(),
             contentDescription = stringResource(R.string.gambar, hewan.nama),
             contentScale = ContentScale.Crop,
             modifier = Modifier
@@ -286,45 +274,33 @@ fun ListItem(viewModel: MainViewModel, userId: String, hewan: Hewan) {
 
     // Confirmation Dialog
     if (showDialog && hewan.imageId.startsWith("pangeranjonathan1")) {
-        AlertDialog(
-            onDismissRequest = { showDialog = false },
-            title = {
-                Text(text = stringResource(id = R.string.confirm_delete_title))
-            },
-            text = {
-                Text(text = stringResource(id = R.string.confirm_delete_message, hewan.nama))
-            },
-            confirmButton = {
-                Button(
-                    onClick = {
-                        // Handle the delete action here
-                        viewModel.deleteData(userId, hewan.id)
-                        showDialog = false
-                    }
-                ) {
-                    Text(text = stringResource(id = R.string.confirm))
-                }
-            },
-            dismissButton = {
-                Button(
-                    onClick = { showDialog = false }
-                ) {
-                    Text(text = stringResource(id = R.string.batal))
-                }
+        AlertDialog(onDismissRequest = { showDialog = false }, title = {
+            Text(text = stringResource(id = R.string.confirm_delete_title))
+        }, text = {
+            Text(text = stringResource(id = R.string.confirm_delete_message, hewan.nama))
+        }, confirmButton = {
+            Button(onClick = {
+                // Handle the delete action here
+                viewModel.deleteData(userId, hewan.id)
+                showDialog = false
+            }) {
+                Text(text = stringResource(id = R.string.confirm))
             }
-        )
+        }, dismissButton = {
+            Button(onClick = { showDialog = false }) {
+                Text(text = stringResource(id = R.string.batal))
+            }
+        })
     }
 }
 
 private suspend fun signIn(context: Context, dataStore: UserDataStore) {
-    val googleIdOption: GetGoogleIdOption = GetGoogleIdOption.Builder()
-        .setFilterByAuthorizedAccounts(false)
-        .setServerClientId(BuildConfig.API_KEY)
-        .build()
+    val googleIdOption: GetGoogleIdOption =
+        GetGoogleIdOption.Builder().setFilterByAuthorizedAccounts(false)
+            .setServerClientId(BuildConfig.API_KEY).build()
 
-    val request: GetCredentialRequest = GetCredentialRequest.Builder()
-        .addCredentialOption(googleIdOption)
-        .build()
+    val request: GetCredentialRequest =
+        GetCredentialRequest.Builder().addCredentialOption(googleIdOption).build()
 
     try {
         val credentialManager = CredentialManager.create(context)
@@ -337,9 +313,7 @@ private suspend fun signIn(context: Context, dataStore: UserDataStore) {
 
 private suspend fun handleSignIn(result: GetCredentialResponse, dataStore: UserDataStore) {
     val credential = result.credential
-    if (credential is CustomCredential &&
-        credential.type == GoogleIdTokenCredential.TYPE_GOOGLE_ID_TOKEN_CREDENTIAL
-    ) {
+    if (credential is CustomCredential && credential.type == GoogleIdTokenCredential.TYPE_GOOGLE_ID_TOKEN_CREDENTIAL) {
         try {
             val googleIdToken = GoogleIdTokenCredential.createFrom(credential.data)
             val nama = googleIdToken.displayName ?: ""

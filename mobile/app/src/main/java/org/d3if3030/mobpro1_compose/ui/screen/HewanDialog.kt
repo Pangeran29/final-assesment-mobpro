@@ -36,9 +36,7 @@ import org.d3if3030.mobpro1_compose.ui.theme.Mobpro1composeTheme
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HewanDialog(
-    bitmap: Bitmap?,
-    onDismissRequest: () -> Unit,
-    onConfirmation: (String, String) -> Unit
+    bitmap: Bitmap?, onDismissRequest: () -> Unit, onConfirmation: (String, String) -> Unit
 ) {
     var nama by remember {
         mutableStateOf("")
@@ -60,19 +58,16 @@ fun HewanDialog(
                         .fillMaxWidth()
                         .aspectRatio(1f)
                 )
-                OutlinedTextField(
-                    value = nama,
+                OutlinedTextField(value = nama,
                     onValueChange = { nama = it },
                     label = { Text(text = stringResource(id = R.string.nama)) },
                     maxLines = 1,
                     keyboardOptions = KeyboardOptions(
-                        capitalization = KeyboardCapitalization.Words,
-                        imeAction = ImeAction.Next
+                        capitalization = KeyboardCapitalization.Words, imeAction = ImeAction.Next
                     ),
                     modifier = Modifier.padding(top = 8.dp)
                 )
-                OutlinedTextField(
-                    value = namaLatin,
+                OutlinedTextField(value = namaLatin,
                     onValueChange = { namaLatin = it },
                     label = { Text(text = stringResource(id = R.string.nama_latin)) },
                     maxLines = 1,
@@ -83,12 +78,13 @@ fun HewanDialog(
                     modifier = Modifier.padding(top = 8.dp)
                 )
                 Row(
-                    modifier = Modifier.fillMaxWidth().padding(top = 16.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 16.dp),
                     horizontalArrangement = Arrangement.Center
                 ) {
                     OutlinedButton(
-                        onClick = { onDismissRequest() },
-                        modifier = Modifier.padding(8.dp)
+                        onClick = { onDismissRequest() }, modifier = Modifier.padding(8.dp)
                     ) {
                         Text(text = stringResource(R.string.batal))
                     }
@@ -110,10 +106,6 @@ fun HewanDialog(
 @Composable
 fun AddDialogPreview() {
     Mobpro1composeTheme {
-        HewanDialog(
-            bitmap = null,
-            onDismissRequest = {},
-            onConfirmation = { _, _ -> }
-        )
+        HewanDialog(bitmap = null, onDismissRequest = {}, onConfirmation = { _, _ -> })
     }
 }
