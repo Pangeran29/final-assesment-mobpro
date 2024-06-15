@@ -14,3 +14,9 @@ No moment is ordinary so let jurney wrap it for you 😉
     <img src="./public/WhatsApp Image 2024-06-15 at 14.22.38_fe92251d.jpg" width="150">
     <img src="./public/WhatsApp Image 2024-06-15 at 14.22.49_e18d3826.jpg" width="150">
 </div>
+
+# Stack
+
+Build using Kotlin, Compose, NestJs on backend
+
+Server live on http://20.2.250.135/api/docs#/
