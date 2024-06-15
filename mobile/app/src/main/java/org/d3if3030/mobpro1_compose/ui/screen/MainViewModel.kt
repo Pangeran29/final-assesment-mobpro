@@ -33,7 +33,7 @@ class MainViewModel : ViewModel() {
                 data.value = LogDayApi.service.getLogDay(userId).data
                 status.value = ApiStatus.SUCCESS
             } catch (e: Exception) {
-                Log.d("MainViewModel", "Failure: ${e.message}")
+                Log.d("MainViewModel.retrieveData", "Failure: ${e.message}")
                 status.value = ApiStatus.FAILED
             }
         }
@@ -51,8 +51,8 @@ class MainViewModel : ViewModel() {
                 if (result.statusCode == 201) retrieveData(userId)
                 else throw Exception(result.message)
             } catch (e: Exception) {
-                Log.d("MainViewModel.saveData.exeception", e.toString())
-                Log.d("MainViewModel", "Failure: ${e.message}")
+                Log.d("MainViewModel.saveData", e.toString())
+                Log.d("MainViewModel.saveData", "Failure: ${e.message}")
                 errorMessage.value = "Error: ${e.message}"
             }
         }
@@ -68,7 +68,7 @@ class MainViewModel : ViewModel() {
                 if (result.statusCode == 200) retrieveData(userEmail)
                 else throw Exception(result.message)
             } catch (e: Exception) {
-                Log.d("MainViewModel", "Failure: ${e.message}")
+                Log.d("MainViewModel.deleteData", "Failure: ${e.message}")
                 errorMessage.value = "Error: ${e.message}"
             }
         }

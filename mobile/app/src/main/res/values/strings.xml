@@ -1,14 +1,12 @@
 <resources>
     <string name="app_name">Jurney</string>
-
     <string name="onboarding_1">Hello welcome to jurney</string>
     <string name="onboarding_1_desc">Capture your moment and let us wrap it for you.</string>
-
     <string name="onboarding_2">Track Your jurney</string>
     <string name="onboarding_2_desc">Ever wonder where your senior high school friend? maybe it is here.</string>
-
     <string name="onboarding_3">"Let's Go"</string>
     <string name="onboarding_3_desc">You will like it.</string>
+    <string name="guide_post">"Hey let's start capture your moment by pressing the + icon button."</string>
 
     <string name="gambar">Gambar %1$s</string>
     <string name="error">Gagal memuat data.. Koneksi error.</string>
