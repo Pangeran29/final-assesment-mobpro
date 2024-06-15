@@ -51,11 +51,9 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.credentials.ClearCredentialStateRequest
 import androidx.credentials.CredentialManager
 import androidx.credentials.CustomCredential
@@ -78,11 +76,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.d3if3030.mobpro1_compose.BuildConfig
 import org.d3if3030.mobpro1_compose.R
-import org.d3if3030.mobpro1_compose.model.Hewan
 import org.d3if3030.mobpro1_compose.model.LogDay
 import org.d3if3030.mobpro1_compose.model.User
 import org.d3if3030.mobpro1_compose.network.ApiStatus
-import org.d3if3030.mobpro1_compose.network.HewanApi
 import org.d3if3030.mobpro1_compose.network.UserDataStore
 import org.d3if3030.mobpro1_compose.ui.theme.Mobpro1composeTheme
 
@@ -112,22 +108,24 @@ fun MainScreen() {
     }
 
     Scaffold(floatingActionButton = {
-        FloatingActionButton(onClick = {
-            val options = CropImageContractOptions(
-                null, CropImageOptions(
-                    imageSourceIncludeCamera = true,
-                    imageSourceIncludeGallery = false,
-                    fixAspectRatio = true
+        if (user.email.isNotEmpty()) {
+            FloatingActionButton(onClick = {
+                val options = CropImageContractOptions(
+                    null, CropImageOptions(
+                        imageSourceIncludeCamera = true,
+                        imageSourceIncludeGallery = false,
+                        fixAspectRatio = true
+                    )
                 )
-            )
-            launcher.launch(options)
-        }) {
-            Icon(
-                imageVector = Icons.Default.Add, contentDescription = stringResource(
-                    id = R.string.tambah_hewan
+                launcher.launch(options)
+            }) {
+                Icon(
+                    imageVector = Icons.Default.Add, contentDescription = stringResource(
+                        id = R.string.tambah_hewan
+                    )
                 )
-            )
 
+            }
         }
     }, topBar = {
         TopAppBar(title = {
@@ -136,27 +134,31 @@ fun MainScreen() {
             containerColor = MaterialTheme.colorScheme.primaryContainer,
             titleContentColor = MaterialTheme.colorScheme.primary
         ), actions = {
-            IconButton(onClick = {
-                if (user.email.isEmpty()) {
-                    CoroutineScope(Dispatchers.IO).launch { signIn(context, dataStore) }
-                } else {
-                    showDialog = true
-                }
+            if (user.email.isNotEmpty()) {
+                IconButton(onClick = {
+                    if (user.email.isEmpty()) {
+                        CoroutineScope(Dispatchers.IO).launch { signIn(context, dataStore) }
+                    } else {
+                        showDialog = true
+                    }
 
-            }) {
-                Icon(
-                    painter = painterResource(
-                        id = R.drawable.baseline_account_circle_24
-                    ),
-                    contentDescription = stringResource(id = R.string.profile),
-                    tint = MaterialTheme.colorScheme.primary
-                )
+                }) {
+                    Icon(
+                        painter = painterResource(
+                            id = R.drawable.baseline_account_circle_24
+                        ),
+                        contentDescription = stringResource(id = R.string.profile),
+                        tint = MaterialTheme.colorScheme.primary
+                    )
+                }
             }
         })
 
     }) { padding ->
-        if (!user.email.isEmpty()) {
+        if (user.email.isNotEmpty()) {
             ScreenContent(viewModel, user.email, Modifier.padding(padding))
+        } else {
+            OnboardingScreen {}
         }
 
         if (showDialog) {
@@ -167,9 +169,9 @@ fun MainScreen() {
         }
 
         if (showHewanDialog) {
-            HewanDialog(bitmap = bitmap,
-                onDismissRequest = { showHewanDialog = false }) { nama, namaLatin ->
-                viewModel.saveData(user.email, nama, bitmap!!)
+            LogDayDialog(bitmap = bitmap,
+                onDismissRequest = { showHewanDialog = false }) { description ->
+                viewModel.saveData(user.email, description, bitmap!!)
                 showHewanDialog = false
             }
         }
@@ -229,7 +231,6 @@ fun ScreenContent(viewModel: MainViewModel, userId: String, modifier: Modifier) 
             }
         }
     }
-
 }
 
 @Composable
@@ -247,8 +248,8 @@ fun ListItem(viewModel: MainViewModel, userId: String, logDay: LogDay) {
     ) {
         AsyncImage(
             model = ImageRequest.Builder(LocalContext.current).data(
-                    logDay.file_location
-                ).crossfade(true).build(),
+                logDay.file_location
+            ).crossfade(true).build(),
             contentDescription = stringResource(R.string.gambar, "LogDay"),
             contentScale = ContentScale.Crop,
             modifier = Modifier
@@ -290,7 +291,7 @@ fun ListItem(viewModel: MainViewModel, userId: String, logDay: LogDay) {
     }
 }
 
-private suspend fun signIn(context: Context, dataStore: UserDataStore) {
+suspend fun signIn(context: Context, dataStore: UserDataStore) {
     val googleIdOption: GetGoogleIdOption =
         GetGoogleIdOption.Builder().setFilterByAuthorizedAccounts(false)
             .setServerClientId(BuildConfig.API_KEY).build()
@@ -350,7 +351,7 @@ private fun getCroppedImage(resolver: ContentResolver, result: CropImageView.Cro
     }
 }
 
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
+@Preview(showBackground = true)
 @Composable
 fun ScreenPreview() {
     Mobpro1composeTheme {

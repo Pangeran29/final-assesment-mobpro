@@ -1,5 +1,15 @@
 <resources>
-    <string name="app_name">mobpro1-compose</string>
+    <string name="app_name">Jurney</string>
+
+    <string name="onboarding_1">Hello welcome to jurney</string>
+    <string name="onboarding_1_desc">Capture your moment and let us wrap it for you.</string>
+
+    <string name="onboarding_2">Track Your jurney</string>
+    <string name="onboarding_2_desc">Ever wonder where your senior high school friend? maybe it is here.</string>
+
+    <string name="onboarding_3">"Let's Go"</string>
+    <string name="onboarding_3_desc">You will like it.</string>
+
     <string name="gambar">Gambar %1$s</string>
     <string name="error">Gagal memuat data.. Koneksi error.</string>
     <string name="try_again">Coba lagi</string>
@@ -7,7 +17,7 @@
     <string name="tutup">Tutup</string>
     <string name="logout">Log Out</string>
     <string name="tambah_hewan">Tambah Hewan</string>
-    <string name="nama">Nama</string>
+    <string name="description">Description</string>
     <string name="nama_latin">Nama latin</string>
     <string name="batal">Batal</string>
     <string name="simpan">Simpan</string>

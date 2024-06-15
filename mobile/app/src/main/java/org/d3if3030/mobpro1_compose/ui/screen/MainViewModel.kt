@@ -11,13 +11,10 @@ import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.toRequestBody
-import org.d3if3030.mobpro1_compose.model.Hewan
 import org.d3if3030.mobpro1_compose.model.LogDay
 import org.d3if3030.mobpro1_compose.network.ApiStatus
-import org.d3if3030.mobpro1_compose.network.HewanApi
 import org.d3if3030.mobpro1_compose.network.LogDayApi
 import java.io.ByteArrayOutputStream
-import kotlin.math.log
 
 class MainViewModel : ViewModel() {
     var data = mutableStateOf(emptyList<LogDay>())

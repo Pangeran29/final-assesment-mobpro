@@ -6,20 +6,16 @@ import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
 import okhttp3.RequestBody
 import okhttp3.logging.HttpLoggingInterceptor
-import org.d3if3030.mobpro1_compose.model.Hewan
 import org.d3if3030.mobpro1_compose.model.LogDay
-import org.d3if3030.mobpro1_compose.model.OpStatus
 import org.d3if3030.mobpro1_compose.model.Response
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.http.DELETE
 import retrofit2.http.GET
-import retrofit2.http.Header
 import retrofit2.http.Multipart
 import retrofit2.http.POST
 import retrofit2.http.Part
 import retrofit2.http.Path
-import retrofit2.http.Query
 
 private const val BASE_URL = "http://20.2.250.135/"
 
